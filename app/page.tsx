@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MahjongBoard } from '@/components/MahjongBoard';
+import { GameControls } from '@/components/GameControls';
 import { MahjongGameData } from '@/types/mahjong';
+import { parseGameTimeline, GameStep } from '@/utils/gameTimeline';
 
 const sampleData: MahjongGameData = {
   "rivers": [
@@ -532,20 +534,43 @@ const sampleData: MahjongGameData = {
 };
 
 export default function Home() {
-  const [gameData, setGameData] = useState<MahjongGameData>(sampleData);
+  const [originalGameData, setOriginalGameData] = useState<MahjongGameData>(sampleData);
+  const [gameSteps, setGameSteps] = useState<GameStep[]>([]);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [jsonInput, setJsonInput] = useState('');
   const [showInput, setShowInput] = useState(false);
 
+  // Initialize game steps from original data
+  useEffect(() => {
+    const steps = parseGameTimeline(originalGameData);
+    setGameSteps(steps);
+    setCurrentStep(steps.length - 1); // Start at the end
+  }, [originalGameData]);
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (isPlaying && currentStep < gameSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setCurrentStep(currentStep + 1);
+      }, 800);
+      return () => clearTimeout(timer);
+    } else if (isPlaying && currentStep >= gameSteps.length - 1) {
+      setIsPlaying(false);
+    }
+  }, [isPlaying, currentStep, gameSteps.length]);
+
   const handleShowInput = () => {
-    setJsonInput(JSON.stringify(gameData, null, 2));
+    setJsonInput(JSON.stringify(originalGameData, null, 2));
     setShowInput(true);
   };
 
   const handleLoadJson = () => {
     try {
       const parsed = JSON.parse(jsonInput);
-      setGameData(parsed);
+      setOriginalGameData(parsed);
       setShowInput(false);
+      setCurrentStep(0);
     } catch (error) {
       alert('Invalid JSON format');
     }
@@ -558,7 +583,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(gameData),
+        body: JSON.stringify(originalGameData),
       });
 
       const result = await response.json();
@@ -572,6 +597,36 @@ export default function Home() {
       alert('Error uploading game data');
     }
   };
+
+  const handleStepChange = (step: number) => {
+    setCurrentStep(step);
+    setIsPlaying(false);
+  };
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  // Get current game data based on step
+  const currentGameData: MahjongGameData = gameSteps[currentStep] ? {
+    rivers: [
+      { area: 'RT', tiles: gameSteps[currentStep].rivers.RT },
+      { area: 'TOP', tiles: gameSteps[currentStep].rivers.TOP },
+      { area: 'BTM', tiles: gameSteps[currentStep].rivers.BTM },
+      { area: 'LT', tiles: gameSteps[currentStep].rivers.LT },
+    ],
+    melds: [
+      { area: 'M-RT', tiles: gameSteps[currentStep].melds['M-RT'] },
+      { area: 'M-TOP', tiles: gameSteps[currentStep].melds['M-TOP'] },
+      { area: 'M-BTM', tiles: gameSteps[currentStep].melds['M-BTM'] },
+      { area: 'M-LT', tiles: gameSteps[currentStep].melds['M-LT'] },
+    ],
+    dora: gameSteps[currentStep].dora,
+    hand: gameSteps[currentStep].hand,
+    rivers_ex: originalGameData.rivers_ex,
+    melds_ex: originalGameData.melds_ex,
+    imageSize: originalGameData.imageSize,
+  } : originalGameData;
 
   return (
     <div className="min-h-screen">
@@ -621,7 +676,18 @@ export default function Home() {
       )}
 
       {/* Game Board */}
-      <MahjongBoard data={gameData} />
+      <MahjongBoard data={currentGameData} />
+
+      {/* Game Controls */}
+      {gameSteps.length > 0 && (
+        <GameControls
+          currentStep={currentStep}
+          totalSteps={gameSteps.length}
+          onStepChange={handleStepChange}
+          isPlaying={isPlaying}
+          onPlayPause={handlePlayPause}
+        />
+      )}
     </div>
   );
 }

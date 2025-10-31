@@ -1,5 +1,6 @@
 import { TileName } from '@/components/MahjongTile';
 
+export type { TileName };
 export type AreaType = 'RT' | 'TOP' | 'BTM' | 'LT';
 export type MeldAreaType = 'M-RT' | 'M-TOP' | 'M-BTM' | 'M-LT';
 
