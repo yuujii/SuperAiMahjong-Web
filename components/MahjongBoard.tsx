@@ -25,13 +25,6 @@ export const MahjongBoard: React.FC<MahjongBoardProps> = ({ data }) => {
 
   return (
     <div className="w-full min-h-screen mahjong-bg flex flex-col">
-      {/* Header */}
-      <div className="p-6 text-center">
-        <h1 className="text-4xl font-bold text-white drop-shadow-lg">
-          スーパーAI麻雀ビューア
-        </h1>
-      </div>
-
       {/* Main Game Area */}
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="relative w-full max-w-6xl aspect-square max-h-[90vh]">
