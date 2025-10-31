@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "雀魂牌譜ビューア",
-  description: "麻雀牌譜を表示するWebアプリケーション",
+  title: "スーパーAI麻雀ビューア",
+  description: "AI検出された麻雀牌譜を表示するWebアプリケーション",
 };
 
 export default function RootLayout({

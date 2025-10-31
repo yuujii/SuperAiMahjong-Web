@@ -25,9 +25,9 @@ const tileDisplay: Record<TileName, string> = {
 };
 
 const sizeClasses = {
-  small: 'w-8 h-10 text-2xl',
-  medium: 'w-12 h-16 text-4xl',
-  large: 'w-16 h-20 text-5xl',
+  small: 'w-7 h-9 text-xl',
+  medium: 'w-10 h-14 text-3xl',
+  large: 'w-14 h-20 text-5xl',
 };
 
 export const MahjongTile: React.FC<MahjongTileProps> = ({
@@ -40,14 +40,17 @@ export const MahjongTile: React.FC<MahjongTileProps> = ({
     <div
       className={`
         ${sizeClasses[size]}
-        bg-white rounded shadow-md
+        bg-gradient-to-b from-gray-50 to-gray-100
+        rounded-sm
+        tile-3d
         flex items-center justify-center
-        border border-gray-300
+        border-2 border-gray-200
+        relative
         ${className}
       `}
       style={{ transform: `rotate(${rotation}deg)` }}
     >
-      <span className="select-none">{tileDisplay[tile]}</span>
+      <span className="select-none drop-shadow-sm">{tileDisplay[tile]}</span>
     </div>
   );
 };

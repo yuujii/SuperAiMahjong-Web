@@ -7,9 +7,9 @@ interface HandDisplayProps {
 
 export const HandDisplay: React.FC<HandDisplayProps> = ({ hand }) => {
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="text-sm text-white/70 font-semibold">手牌</div>
-      <div className="flex gap-1 p-3 bg-black/30 rounded-lg border-2 border-blue-600/50">
+    <div className="flex flex-col items-center gap-3">
+      <div className="text-xs text-cyan-400 font-semibold tracking-wider">手牌</div>
+      <div className="flex gap-1 p-4 bg-black/50 backdrop-blur-sm rounded-lg border border-cyan-500/30 shadow-2xl">
         {hand.map((tile, index) => (
           <MahjongTile
             key={`hand-${index}`}

@@ -8,10 +8,10 @@ interface MeldDisplayProps {
 }
 
 const areaConfig = {
-  'M-RT': { rotation: 90, label: '右家副露' },
-  'M-TOP': { rotation: 0, label: '対面副露' },
-  'M-BTM': { rotation: 0, label: '自分副露' },
-  'M-LT': { rotation: -90, label: '左家副露' }
+  'M-RT': { rotation: 90 },
+  'M-TOP': { rotation: 0 },
+  'M-BTM': { rotation: 0 },
+  'M-LT': { rotation: -90 }
 };
 
 export const MeldDisplay: React.FC<MeldDisplayProps> = ({ area, tiles }) => {
@@ -20,18 +20,15 @@ export const MeldDisplay: React.FC<MeldDisplayProps> = ({ area, tiles }) => {
   if (tiles.length === 0) return null;
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="text-xs text-white/50">{config.label}</div>
-      <div className="flex gap-1 p-2 bg-black/20 rounded">
-        {tiles.map((tile, index) => (
-          <MahjongTile
-            key={`${area}-${index}`}
-            tile={tile}
-            size="small"
-            rotation={config.rotation}
-          />
-        ))}
-      </div>
+    <div className="flex gap-0.5">
+      {tiles.map((tile, index) => (
+        <MahjongTile
+          key={`${area}-${index}`}
+          tile={tile}
+          size="small"
+          rotation={config.rotation}
+        />
+      ))}
     </div>
   );
 };
