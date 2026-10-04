@@ -49,8 +49,8 @@ export interface MahjongGameData {
   rivers: River[];
   melds: Meld[];
   dora: TileName[];
-  rivers_ex: RiverEx[];
-  melds_ex: MeldEx[];
-  imageSize: number;
+  rivers_ex?: RiverEx[];
+  melds_ex?: MeldEx[];
+  imageSize?: number;
   hand: TileName[];
 }

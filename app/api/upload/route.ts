@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MahjongGameData } from '@/types/mahjong';
+import { isMahjongGameData } from '@/utils/validateGameData';
 
 export async function POST(request: NextRequest) {
   try {
-    const data: MahjongGameData = await request.json();
+    const data: unknown = await request.json();
 
     // Validate basic structure
-    if (!data.rivers || !data.melds || !data.dora || !data.hand) {
+    if (!isMahjongGameData(data)) {
       return NextResponse.json(
         { error: 'Invalid data structure' },
         { status: 400 }
@@ -23,6 +23,9 @@ export async function POST(request: NextRequest) {
       message: 'Game data uploaded successfully'
     });
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ error: 'Invalid JSON format' }, { status: 400 });
+    }
     console.error('Error processing upload:', error);
     return NextResponse.json(
       { error: 'Failed to process game data' },

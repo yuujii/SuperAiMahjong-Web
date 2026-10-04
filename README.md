@@ -135,3 +135,14 @@ npm run dev
 ## ライセンス
 
 MIT
+
+## 検証
+
+```bash
+# 回帰テストは Node.js 24 以降の TypeScript 読み込み機能を使用
+npm test
+npx tsc --noEmit
+npm run build
+```
+
+読み込みとAPIは、河・副露のエリア、配列、牌文字列を検証します。エリアの重複を拒否し、タイムライン生成対象は河の合計136枚までです。検出用の `rivers_ex`・`melds_ex`・`imageSize` は省略できます。

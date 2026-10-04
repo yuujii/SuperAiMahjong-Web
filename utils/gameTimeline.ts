@@ -1,4 +1,5 @@
-import { MahjongGameData, TileName } from '@/types/mahjong';
+import type { MahjongGameData, TileName } from '@/types/mahjong';
+import { isMahjongGameData } from './validateGameData';
 
 export interface GameStep {
   step: number;
@@ -19,6 +20,7 @@ export interface GameStep {
 }
 
 export function parseGameTimeline(data: MahjongGameData): GameStep[] {
+  if (!isMahjongGameData(data)) throw new TypeError('Invalid game data structure');
   const steps: GameStep[] = [];
 
   // Calculate total number of tiles across all rivers

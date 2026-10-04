@@ -17,6 +17,8 @@ export const GameControls: React.FC<GameControlsProps> = ({
   isPlaying,
   onPlayPause,
 }) => {
+  const progress = totalSteps > 1 ? (currentStep / (totalSteps - 1)) * 100 : 0;
+
   const handlePrevious = () => {
     if (currentStep > 0) {
       onStepChange(currentStep - 1);
@@ -56,7 +58,7 @@ export const GameControls: React.FC<GameControlsProps> = ({
             onChange={(e) => onStepChange(parseInt(e.target.value))}
             className="w-80 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
             style={{
-              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentStep / (totalSteps - 1)) * 100}%, #374151 ${(currentStep / (totalSteps - 1)) * 100}%, #374151 100%)`
+              background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${progress}%, #374151 ${progress}%, #374151 100%)`
             }}
           />
 

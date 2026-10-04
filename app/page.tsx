@@ -5,6 +5,7 @@ import { MahjongBoard } from '@/components/MahjongBoard';
 import { GameControls } from '@/components/GameControls';
 import { MahjongGameData } from '@/types/mahjong';
 import { parseGameTimeline, GameStep } from '@/utils/gameTimeline';
+import { isMahjongGameData } from '@/utils/validateGameData';
 
 const sampleData: MahjongGameData = {
   "rivers": [
@@ -567,7 +568,12 @@ export default function Home() {
 
   const handleLoadJson = () => {
     try {
-      const parsed = JSON.parse(jsonInput);
+      const parsed: unknown = JSON.parse(jsonInput);
+      if (!isMahjongGameData(parsed)) {
+        alert('Invalid game data structure');
+        return;
+      }
+      setIsPlaying(false);
       setOriginalGameData(parsed);
       setShowInput(false);
       setCurrentStep(0);
