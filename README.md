@@ -146,3 +146,18 @@ npm run build
 ```
 
 読み込みとAPIは、河・副露のエリア、配列、牌文字列を検証します。エリアの重複を拒否し、タイムライン生成対象は河の合計136枚までです。検出用の `rivers_ex`・`melds_ex`・`imageSize` は省略できます。
+
+### セキュリティ依存更新（2026-10-04）
+
+Next.js は保守サポート中の15系修正版 `15.5.27` に固定しています。React / React DOM は互換条件を満たす18.3.1を維持しています。
+
+Next.js 内部が固定している PostCSS 8.4.31にも公開済み脆弱性があるため、`overrides.next.postcss` で開発依存と同じ修正版8.5.28へ統一しています。PostCSS 8のプラグイン・`process()` APIを使う経路を回帰テストと本番ビルドで確認します。Next.jsが修正版を直接採用した時点で、この限定overrideを再評価してください。nanoidは既存3.x範囲で3.3.19へ更新しています。
+
+根拠：
+
+- [Next.jsサポート方針](https://nextjs.org/support-policy)
+- [Next.js 15.5.27のセキュリティリリース](https://github.com/vercel/next.js/releases/tag/v15.5.27)
+- [PostCSSのソースマップ読み込み修正（8.5.23以降）](https://github.com/postcss/postcss/security/advisories/GHSA-fxqj-rqcc-2cmp)
+- [nanoidの入力サイズに関する修正](https://github.com/advisories/GHSA-2v37-7h3g-55p8)
+
+最終監査では本番依存（`npm audit --omit=dev`）の指摘は0件です。全依存には開発用の `braces` と、その依存元 `chokidar` / `fast-glob` / `micromatch` / `tailwindcss` のhigh指摘が残ります。根本の[GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm)は2026-10-04時点で修正版が公開されていません。自動修正が提案するTailwind 4へのメジャー移行は、この更新に含めていません。
